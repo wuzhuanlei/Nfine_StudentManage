@@ -7,7 +7,7 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 学生Id
         /// </summary>
-        public long StudentId { get; set; }
+        public string F_Id { get; set; }
         /// <summary>
         /// 学生姓名
         /// </summary>
@@ -15,11 +15,11 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 学生编号
         /// </summary>
-        public string Code { get; set; }
+        public string Account { get; set; }
         /// <summary>
         /// 民族
         /// </summary>
-        public string Nationality { get; set; }
+        public int Nationality { get; set; }
         /// <summary>
         /// 政治面貌
         /// </summary>
@@ -31,11 +31,14 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 证件号码
         /// </summary>
-        public string IDCardNumber { get; set; }
+        public string CertificateCode { get; set; }
         /// <summary>
         /// 校园卡号
         /// </summary>
         public string CampusCode { get; set; }
+        /// <summary>
+        /// 联系电话
+        /// </summary>
         public string Telephone { get; set; }
         /// <summary>
         /// 宿舍编号
@@ -48,15 +51,19 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 性别
         /// </summary>
-        public bool Sex { get; set; }
+        public int Sex { get; set; }
         /// <summary>
         /// 户籍类型
         /// </summary>
-        public bool CensusType { get; set; }
+        public int CensusType { get; set; }
         /// <summary>
         /// 证件类型
         /// </summary>
-        public bool IDCardType { get; set; }
+        public int CertificateType { get; set; }
+        /// <summary>
+        /// 班级
+        /// </summary>
+        public string ClassCode { get; set; }
         /// <summary>
         /// 辅导员
         /// </summary>
@@ -76,11 +83,11 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 院系
         /// </summary>
-        public string Department { get; set; }
+        public string DepartmentName { get; set; }
         /// <summary>
         /// 婚姻状况
         /// </summary>
-        public string MaritalStatus { get; set; }
+        public int MaritalStatus { get; set; }
         /// <summary>
         /// 家庭电话
         /// </summary>
@@ -101,12 +108,17 @@ namespace NFine.Domain.Entity.StudentManage
         /// 出生日期
         /// </summary>
         public DateTime? Birthday { get; set; }
-        public string F_Id { get; set; }
-        public string F_CreatorUserId { get; set; }
+        /// <summary>
+        /// 图像
+        /// </summary>
+        public string Photo { get; set; }
+        public bool? F_DeleteMark { get; set; }
+        public bool? F_EnabledMark { get; set; }
+        public string F_Description { get; set; }
         public DateTime? F_CreatorTime { get; set; }
+        public string F_CreatorUserId { get; set; }
         public DateTime? F_LastModifyTime { get; set; }
         public string F_LastModifyUserId { get; set; }
-        public bool? F_DeleteMark { get; set; }
         public DateTime? F_DeleteTime { get; set; }
         public string F_DeleteUserId { get; set; }
     }

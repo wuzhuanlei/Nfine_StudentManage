@@ -141,10 +141,11 @@
     <Compile Include="Areas\SystemSecurity\Controllers\LogController.cs" />
     <Compile Include="Areas\SystemSecurity\Controllers\ServerMonitoringController.cs" />
     <Compile Include="Areas\SystemSecurity\SystemSecurityAreaRegistration.cs" />
+    <Compile Include="Areas\UniversityManage\UniversityManageAreaRegistration.cs" />
     <Compile Include="Controllers\ClientsDataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Areas\StudentManage\StudentsController.cs" />
+    <Compile Include="Areas\UniversityManage\Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -167,6 +168,7 @@
     <Content Include="Content\img\button_pm_close.png" />
     <Content Include="Content\img\cy-reward-title-bg.jpg" />
     <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\Photo.png" />
     <Content Include="Content\img\radio1.jpg" />
     <Content Include="Content\img\radio2.jpg" />
     <Content Include="Content\img\samples\angelina-300.jpg" />
@@ -563,7 +565,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\ReportManage\Views\Echarts\" />
-    <Folder Include="Areas\SystemManage\Views\Student\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\ReportManage\Views\Highcharts\Sample1.cshtml" />
@@ -617,6 +618,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\SystemManage\Views\User\Info.cshtml" />
+    <Content Include="Areas\SystemManage\Views\Student\Index.cshtml" />
+    <Content Include="Areas\SystemManage\Views\Student\Details.cshtml" />
+    <Content Include="Areas\SystemManage\Views\Student\Form.cshtml" />
+    <Content Include="Areas\UniversityManage\Views\Student\Details.cshtml" />
+    <Content Include="Areas\UniversityManage\Views\Student\Form.cshtml" />
+    <Content Include="Areas\UniversityManage\Views\Student\Index.cshtml" />
+    <Content Include="Areas\UniversityManage\Views\Student\Info.cshtml" />
+    <Content Include="Areas\UniversityManage\Views\Web.config" />
     <None Include="Properties\PublishProfiles\NFine.Framework.Release.pubxml" />
   </ItemGroup>
   <PropertyGroup>

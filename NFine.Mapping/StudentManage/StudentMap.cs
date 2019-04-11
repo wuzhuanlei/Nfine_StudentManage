@@ -8,7 +8,7 @@ namespace NFine.Mapping.StudentManage
         public StudentMap()
         {
             this.ToTable("Student");
-            this.HasKey(t => t.StudentId);
+            this.HasKey(t => t.F_Id);
         }
     }
 }
