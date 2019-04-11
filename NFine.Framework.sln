@@ -23,6 +23,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFine.Data", "NFine.Data\NF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFine.Mapping", "NFine.Mapping\NFine.Mapping.csproj", "{4E642CBE-F6C5-4CB9-9474-6B349652FE77}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{0BB296DC-5D4E-45C9-B14A-9E138A3F0CD5}"
+	ProjectSection(SolutionItems) = preProject
+		..\database\NFineBase.mdf = ..\database\NFineBase.mdf
+		..\database\NFineBase.sql = ..\database\NFineBase.sql
+		..\database\NFineBase_log.ldf = ..\database\NFineBase_log.ldf
+		..\database\数据库关系图.LDM = ..\database\数据库关系图.LDM
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
