@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace NFine.Domain.Entity.StudentManage
 {
@@ -15,6 +16,8 @@ namespace NFine.Domain.Entity.StudentManage
         /// <summary>
         /// 学生编号
         /// </summary>
+
+        [Required(ErrorMessage = "{0} 不能为空")]
         public string Account { get; set; }
         /// <summary>
         /// 民族
@@ -112,6 +115,11 @@ namespace NFine.Domain.Entity.StudentManage
         /// 图像
         /// </summary>
         public string Photo { get; set; }
+        /// <summary>
+        /// 学生状态
+        /// </summary>
+        public string Status { get; set; }
+
         public bool? F_DeleteMark { get; set; }
         public bool? F_EnabledMark { get; set; }
         public string F_Description { get; set; }

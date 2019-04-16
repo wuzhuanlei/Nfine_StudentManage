@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "ImportForm";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+<script>
+    $(function () {
+        //完成提交保存
+        $("#btn_cancel").click(function () {
+            /*调用上级列表进行刷新*/
+            $.currentIframe().$("#gridTable").trigger("reloadGrid");
+            dialogClose();
+        })
+        //完成提交保存
+        $("#btn_upload").click(function () {
+            if (!$("#form1").Validform()) {
+                return false;
+            }
+            $.SaveFormData({
+                file: $('input[type=file]')[0].files[0],
+                url: "/EquipmentManage/EquipmentSupplier/Upload",
+                loading: "正在导入数据...",
+                close: false,
+                success: function (result) {
+                    jQuery("#gridTable").jqGrid("clearGridData");
+                    //console.log(result);
+                    for (var i = 0; i < result.resultdata.length; i++) {
+                        $("#gridTable").jqGrid('addRowData', i + 1, result.resultdata[i]);
+                    }
+                    $.currentIframe().$('#gridTable').trigger('reloadGrid');
+                }
+            });
+        });
+        $("#FileName").fileinput({
+            showUpload: false,
+            showRemove: true,
+            showPreview: false,
+            language: 'zh',
+            maxFileSize: 1024 * 10,
+        });
+    });</script>
+<div class="ui-layout">
+    <div class="ui-layout-center">
+        <div class="center-Panel" style="margin-left:10px;margin-top:10px;margin-right:10px;">
+            <form id="form1" name="form1" class="form-horizontal form-table-bordered" enctype="multipart/form-data">
+                <table class="form border1">
+                    <tr>
+                        <td class="formTitle">模板文件</td>
+                        <td class="formValue">
+                            <a href="@ViewBag.TemplateFile" style="color:blue">导入模板.xls</a>
+                        </td>
+                        <td class="formTitle">Excel文件<font face="宋体">*</font></td>
+                        <td class="formValue" colspan="3">
+                            <input type="file" id="FileName" accept=".xls,.xlsx" class="file" isvalid="yes" checkexpession='["NotNull"]' />
+                        </td>
+                    </tr>
+                </table>
+                <div class="gridPanel">
+                    <table id="gridTable"></table>
+                    <div id="gridPager"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="form-button" id="wizard-actions">
+    <a id="btn_upload" class="btn btn-primary">上&nbsp;传</a>
+    <a id="btn_cancel" class="btn btn-default">退&nbsp;出</a>
+</div>

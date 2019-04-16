@@ -36,25 +36,45 @@
                 },
                 { label: '家庭电话', name: 'Phone', width: 80, align: 'left' },
                 { label: '家庭地址', name: 'Address', width: 80, align: 'left' },
-                //{
-                //    label: "允许登录", name: "F_EnabledMark", width: 60, align: "center",
-                //    formatter: function (cellvalue, options, rowObject) {
-                //        if (cellvalue == 1) {
-                //            return '<span class=\"label label-success\">正常</span>';
-                //        } else if (cellvalue == 0) {
-                //            return '<span class=\"label label-default\">禁用</span>';
-                //        }
-                //    }
-                //},
+                {
+                    label: "状态", name: "Status", width: 60, align: "center",
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == "NewCreate") {
+                            return '<span class=\"label label-success\">新建</span>';
+                        } else if (cellvalue == "Abandon") {
+                            return '<span class=\"label label-default\">作废</span>';
+                        }
+                    }
+                },
+                {
+                    label: '删除时间', name: 'F_DeleteTime', width: 80, align: 'left',
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                },
                 { label: '备注', name: 'F_Description', width: 200, align: 'left' }
             ],
             pager: "#gridPager",
             sortname: 'Account asc,F_CreatorTime desc',
             viewrecords: true
         });
+        //$("#btn_search").click(function () {
+        //    $gridList.jqGrid('setGridParam', {
+        //        postData: { keyword: $("#txt_keyword").val() },
+        //    }).trigger('reloadGrid');
+        //});
+
+        $("#txt_condition .dropdown-menu li").click(function () {
+            var text = $(this).find('a').html();
+            var value = $(this).find('a').attr('data-value');
+            $("#txt_condition .dropdown-text").html(text).attr('data-value', value)
+        });
+
         $("#btn_search").click(function () {
+            var queryJson = {
+                condition: $("#txt_condition").find('.dropdown-text').attr('data-value'),
+                keyword: $("#txt_keyword").val()
+            }
             $gridList.jqGrid('setGridParam', {
-                postData: { keyword: $("#txt_keyword").val() },
+                postData: { queryJson: JSON.stringify(queryJson) },
             }).trigger('reloadGrid');
         });
     }
@@ -99,10 +119,48 @@
             title: "查看学生信息",
             url: "/UniversityManage/Student/Details?keyValue=" + keyValue,
             width: "700px",
-            height: "550px",
-            btn: null,
+            height: "700px",
+            btn: "退宿",
         });
-    }   
+    }
+    function btn_import() {
+        $.modalOpen({
+            id: "ImportForm",
+            title: "导入学生",
+            url: "/UniversityManage/Student/ImportForm",
+            width: "700px",
+            height: "510px",
+            btn: null
+        });
+    }
+    function PostAndGetFileByUrl(url, type, postdata) {
+        var temp;
+        $.ajax({
+            url: url,
+            type: type,
+            data: { keyword: postdata },
+            async: true,
+            dataType: "Text",
+            success: function (data) {
+                downloadFile(data);
+            }
+        });
+        return temp;
+    }
+    function btn_export() {
+        var $gridList = $("#gridList");
+        var rowData = $gridList.jqGrid('getGridParam', 'selarrrow');
+        PostAndGetFileByUrl("/UniversityManage/Student/WriteToExcel", "POST", rowData.join(","));
+    }
+    function downloadFile(url) {
+        try {
+            var elemIF = document.createElement("iframe");
+            elemIF.src = url;
+            elemIF.style.display = "none";
+            document.body.appendChild(elemIF);
+        } catch (e) {
+        }
+    }
 </script>
 
 <div class="topPanel">
@@ -113,12 +171,16 @@
         <div class="btn-group">
             <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus">新增学生</i></a>
         </div>
+        <div class="btn-group">
+            <a id="NF-import" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_import()"><i class="fa fa-upload">导入</i></a>
+        </div>
         <div class="operate">
             <ul class="nav nav-pills">
                 <li class="first">已选中<span>1</span>项</li>
                 <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>修改学生</a></li>
                 <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>删除学生</a></li>
                 <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>查看学生信息</a></li>
+                <li><a id="NF-export" authorize="yes" onclick="btn_export()"><i class="fa fa-download"></i>导出</a></li>
             </ul>
             <a href="javascript:;" class="close"></a>
         </div>
@@ -128,9 +190,28 @@
         <table>
             <tr>
                 <td>
-                    <div class="input-group">
-                        <input id="txt_keyword" type="text" class="form-control" placeholder="账户/姓名/手机" style="width: 200px;">
-                        <span class="input-group-btn">
+                    <div id="txt_condition" class="btn-group">
+                        <a class="btn btn-default dropdown-text" data-toggle="dropdown">选择条件</a>
+                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:void()" data-value="Account">学号</a></li>
+                            <li><a href="javascript:void()" data-value="Name">姓名</a></li>
+                            <li><a href="javascript:void()" data-value="Telephone">联系电话</a></li>
+                            <li><a href="javascript:void()" data-value="CampusCode">校园卡号</a></li>
+                            <li><a href="javascript:void()" data-value="Nationality">民族</a></li>
+                            <li><a href="javascript:void()" data-value="Political">政治面貌</a></li>
+                            <li><a href="javascript:void()" data-value="Birthplace">籍贯</a></li>
+                            <li><a href="javascript:void()" data-value="CertificateCode">证件号码</a></li>
+                            <li><a href="javascript:void()" data-value="EntryGrade">入学年级</a></li>
+                            <li><a href="javascript:void()" data-value="Counselor">辅导员</a></li>
+                            <li><a href="javascript:void()" data-value="CounselorPhone">辅导员电话</a></li>
+                            <li><a href="javascript:void()" data-value="ClassCode">班级</a></li>
+                            <li><a href="javascript:void()" data-value="Profession">专业</a></li>
+                            <li><a href="javascript:void()" data-value="DepartmentName">院系</a></li>
+                            <li><a href="javascript:void()" data-value="Hobby">兴趣爱好</a></li>
+                        </ul>
+                        <span class="input-group">
+                            <input id="txt_keyword" type="text" class="form-control" placeholder="请输入查询条件" style="width: 200px;">
                             <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
                         </span>
                     </div>

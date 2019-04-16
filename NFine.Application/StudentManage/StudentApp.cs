@@ -1,4 +1,5 @@
-﻿using NFine.Code;
+﻿using NFine.Application.Enums;
+using NFine.Code;
 using NFine.Domain.Entity.StudentManage;
 using NFine.Domain.IRepository.StudentManage;
 using NFine.Repository.StudentManage;
@@ -30,7 +31,7 @@ namespace NFine.Application.StudentManage
                 {
                     throw new Exception("手机号码格式不正确。");
                 }
-
+                studentEntity.Status = StudentStatus.NewCreate.ToString();
                 studentEntity.Create();
                 service.Insert(studentEntity);
             }
@@ -45,20 +46,43 @@ namespace NFine.Application.StudentManage
             }
             else
             {
-                service.Delete(t => t.F_Id == keyValue);
+                var studentEntity = service.FindEntity(keyValue);
+                studentEntity.Status = StudentStatus.Abandon.ToString();
+                studentEntity.F_DeleteTime = DateTime.Now;
+                studentEntity.F_Description = "删除成功";
+                var current = OperatorProvider.Provider.GetCurrent();
+                if (current != null) { studentEntity.F_DeleteUserId = current.UserId; }
+                studentEntity.Modify(keyValue);
+                service.Update(studentEntity);
             }
         }
+        private struct QueryItem
+        {
+            public string Condition { get; set; }
+            public string Keyword { get; set; }
+        }
 
-        public List<StudentEntity> GetList(Pagination pagination, string keyword)
+        public List<StudentEntity> GetList(Pagination pagination, string queryJson)
+        {
+            var expression = ExtLinq.True<StudentEntity>();
+            if (!string.IsNullOrEmpty(queryJson))
+            {
+                QueryItem queryData = Newtonsoft.Json.JsonConvert.DeserializeObject<QueryItem>(queryJson);
+                if (!queryData.IsEmpty())
+                {
+                    expression = expression.And(t => t.GetType().GetProperty(queryData.Condition).Name.Contains(queryData.Keyword));
+                }
+            }
+            return service.FindList(expression, pagination);
+        }
+        public List<StudentEntity> GetList(string keyword)
         {
             var expression = ExtLinq.True<StudentEntity>();
             if (!string.IsNullOrEmpty(keyword))
             {
-                expression = expression.And(t => t.Account.Contains(keyword));
-                expression = expression.Or(t => t.Name.Contains(keyword));
-                expression = expression.Or(t => t.Telephone.Contains(keyword));
+                expression = expression.And(t => t.F_Id.Contains(keyword));
             }
-            return service.FindList(expression, pagination);
+            return service.FindList(expression.ToString());
         }
 
         public StudentEntity GetForm(string keyValue)
